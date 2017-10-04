@@ -1,21 +1,21 @@
-create function isAvailable(
-	num_riders int, d_id varchar(64), origin varchar(64), dest varchar(64), rideTime timestamp
+/*create function isAvailable(
+	num_riders int, d_id varchar(64), d_origin varchar(64), d_dest varchar(64), ride_time timestamp
 	)
 returns boolean
 as
 $$
 begin
-    if num_riders <= (select t.space_for from trips t where t.id = d_id and t.origin = origin
-    				and t.dest = dest and t.rideTime = rideTime and t.status = 'available') -
-    				coalesce(sum(select b.num_riders from bids b where b.d_id = d_id and b.d_origin = origin
-    				and b.d_dest = dest and b.d_rideTime = rideTime and b.status = 'accepted'), 0) then
+    if num_riders <= (select t.space_for from trips t where t.id = d_id and t.origin = d_origin
+    				and t.dest = d_dest and t.ride_time = ride_time and t.status = 'tentative') -
+    				coalesce(sum(select b.num_riders from bids b where b.d_id = d_id and b.d_origin = d_origin
+    				and b.d_dest = d_dest and b.ride_time = ride_time and b.status = 'accepted'), 0) then
     	return true;
     else
     	return false;
     end if;
 end;
 $$
-language plpgsql;
+language plpgsql;*/
 
 create table cars(
 	company varchar(64),
@@ -45,13 +45,13 @@ create table trips(
 	id varchar(64) references users(email),
 	origin varchar(64),
 	dest varchar(64),
-	rideTime timestamp,
+	ride_time timestamp,
 	space_for int not null,
 	company varchar(64) not null,
 	model varchar(64) not null,
-	status text check(status in ('available','ongoing','completed','cancelled')),
-	primary key(id, origin, dest, rideTime),
-	foreign key(company, model) references cars(company, model) not null
+	status text check(status in ('tentative','ongoing','completed','cancelled')),
+	primary key(id, origin, dest, ride_time),
+	foreign key(company, model) references cars(company, model)
 );
 
 create table bids(
@@ -61,12 +61,12 @@ create table bids(
 	d_id varchar(64),
 	d_origin varchar(64),
 	d_dest varchar(64),
-	d_rideTime timestamp,
+	ride_time timestamp,
 	num_riders int not null,
 	price decimal(10,2) not null,
 	status text check(status in ('accepted','pending','completed','cancelled')),
-	foreign key(d_id, d_origin, d_dest, d_rideTime) 
-	references trips(id, origin, dest, rideTime) on delete cascade on update cascade,
-	primary key(p_id, p_origin, p_dest, d_id, d_origin, d_dest, d_rideTime),
+	foreign key(d_id, d_origin, d_dest, ride_time) 
+	references trips(id, origin, dest, ride_time) on delete cascade on update cascade,
+	primary key(p_id, p_origin, p_dest, d_id, d_origin, d_dest, ride_time),
 	check(p_id != d_id)
 );
