@@ -13,7 +13,7 @@ You may want a GUI to do stuff, but you don't need it.
 https://www.pgadmin.org/download/pgadmin-4-windows/
 
 To create the DB (Yes, it's using the root user, no it's not good practice)
-`$ createdb tongpang -U postgres`
+`$ createdb -U postgres tongpang`
 
 All commands from here are within POSTGRES itself.
 
