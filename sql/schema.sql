@@ -12,7 +12,7 @@ create function init_car () returns trigger as $$
 	end; $$ language plpgsql;
 
 create trigger init_car before insert on trips
-for each row execute procedure init_car();
+	for each row execute procedure init_car();
 
 create function init_bid() returns trigger as $$
 	begin
