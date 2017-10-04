@@ -10,7 +10,7 @@ var router = express.Router();
 //     } 
 // };
 var pg = require("pg");
-var connectionString = "postgres://postgres:kkbbcute@localhost:5432/postgres";
+var connectionString = "postgres://postgres:kkbbcute@localhost:5432/tongpang";
 // var pgp = require('pg-promise')(initOptions)
 // var db = pgp('postgres://postgres:kkbbcute@localhost:5432/Project1')
 
@@ -31,7 +31,7 @@ router.get('/dbtest/', function(req, res, next) {
          console.log("not able to get connection "+ err);
          res.status(400).send(err);
      } 
-     client.query('SELECT * FROM book', [] ,function(err,result) {
+     client.query('SELECT * FROM books', [] ,function(err,result) {
          done(); // closing the connection;
          if(err){
              console.log(err);
