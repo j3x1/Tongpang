@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row">
+    <h1>Welcome, {{driverName}}</h1>
+    
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-info" ng-click="showAddForm = !showAddForm">Create ride</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12" ng-show="showAddForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" ng-model="addForm.name" id="name">
+      </div>
+      <div class="form-group">
+        <label for="spaces">Spaces Available:</label>
+        <input type="number" class="form-control" ng-model="addForm.spaces" id="spaces">
+      </div>
+      <div class="form-group">
+        <label for="destination">Destination</label>
+        <input type="text" class="form-control" ng-model="addForm.destination" id="destination">
+      </div>
+      <button type="submit" class="btn btn-default" ng-click="addTrip()">Add</button>
+    </form>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>My Rides</h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Car</th>
+            <th>Destination</th>
+            <th>Vacancies</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="car in carList">
+            <td>{{car.name}}</td>
+            <td>{{car.destination}}</td>
+            <td>{{car.spaces}}</td>
+            <th><button class="btn btn-danger clickable" ng-click="delete(car.id)">Delete</button></th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

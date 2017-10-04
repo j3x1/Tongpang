@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <h1>Welcome, {{riderName}}</h1>
+  </div>
+  
+  <div class="row">
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Car</th>
+        <th>Destination</th>
+        <th>Vacancies</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="car in carList">
+        <td>{{car.name}}</td>
+        <td>{{car.destination}}</td>
+        <td>{{car.spaces}}</td>
+        <th><button class="btn btn-default clickable" ng-click="bid(car.id)">Bid</button></th>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
