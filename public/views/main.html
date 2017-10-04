@@ -5,15 +5,21 @@
       <p>{{welcome}}</p>
     </div>
     
-    <div class="col-sm-6">
-      <a href="/#!/driver">
-        <button class="btn btn-success form-control">Login as Driver</button>
-      </a>
+    <div class="col-sm-12">
+      <input type="email" class="form-control" ng-model="loginEmail"/>
     </div>
     <div class="col-sm-6">
-      <a href="/#!/rider">
-        <button class="btn btn-success form-control">Login as Rider</button>
-      </a>
+      <!-- <a href="/#!/driver"> -->
+        <button class="btn btn-success form-control" ng-disabled="loginEmail.length === 0" ng-click="login('driver')">Login as Driver</button>
+      <!-- </a> -->
+    </div>
+    <div class="col-sm-6">
+      <!-- <a href="/#!/rider"> -->
+        <button class="btn btn-success form-control" ng-disabled="loginEmail.length === 0" ng-click="login('rider')">Login as Rider</button>
+      <!-- </a> -->
+    </div>
+    <div class="col-sm-12" ng-show="errorMessage">
+      {{ errorMessage }}
     </div>
 
   </div>
