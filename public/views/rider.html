@@ -2,6 +2,23 @@
   <div class="row">
     <h1>Welcome, {{riderName}}</h1>
   </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <input type="text" class="form-control" ng-model="addForm.origin"/>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" ng-model="addForm.dest"/>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" ng-model="addForm.num_riders"/>
+    </div>
+    <div class="col-sm-4">
+      <!-- <a href="/#!/driver"> -->
+        <button class="btn btn-success form-control" ng-disabled="origin.length === 0 || dest.length === 0" ng-click="getRelevantTrips()">Get Trips</button>
+      <!-- </a> -->
+    </div>
+  </div>
   
   <div class="row">
     <table class="table table-hover">

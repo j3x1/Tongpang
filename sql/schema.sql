@@ -1,7 +1,8 @@
 /*
 create function init_car () returns trigger as $$
 	begin
-	if not(new.company is null and new.model is null and new.status is null) then
+	if not(new.company is null and new.model is null and new.status is null 
+	and new.space_for > 0) and new.rideTime < now() then
 		return null;
 	else
 		new.company = (select u.company from users u where new.id = u.email);
@@ -26,6 +27,10 @@ create function init_bid() returns trigger as $$
 
 create trigger init_bid before insert on bids
 	for each row execute procedure init_bid();
+*/
+
+/* triggers still needed:
+
 */
 
 create table cars(
@@ -57,10 +62,10 @@ create table trips(
 	origin varchar(64),
 	dest varchar(64),
 	ride_time timestamp,
-	space_for int not null,
+	space_for int not null check(space_for > 0),
 	company varchar(64),
 	model varchar(64),
-	status text check(status in ('tentative','ongoing','completed','cancelled')),
+	status text check(status in ('tentative', 'ongoing', 'completed', 'cancelled')),
 	primary key(id, origin, dest, ride_time),
 	foreign key(company, model) references cars(company, model)
 );
@@ -69,13 +74,13 @@ create table bids(
 	p_id varchar(64) references users(email),
 	p_origin varchar(64),
 	p_dest varchar(64),
-	d_id varchar(64),
-	d_origin varchar(64),
-	d_dest varchar(64),
-	ride_time timestamp,
+	d_id varchar(64) not null,
+	d_origin varchar(64) not null,
+	d_dest varchar(64) not null,
+	ride_time timestamp not null,
 	num_riders int not null,
 	price decimal(10,2) not null,
-	status text check(status in ('accepted','pending','completed','cancelled', 'no show')),
+	status text check(status in ('accepted', 'pending', 'completed', 'cancelled', 'rejected', 'no show')),
 	foreign key(d_id, d_origin, d_dest, ride_time) 
 	references trips(id, origin, dest, ride_time) on delete cascade on update cascade,
 	primary key(p_id, p_origin, p_dest, d_id, d_origin, d_dest, ride_time),

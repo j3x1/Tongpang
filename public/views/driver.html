@@ -30,10 +30,32 @@
     </form>
   </div>
   <div class="row">
-    <div class="col-xs-12">
-      <h2>My Ride History</h2>
-      <div ng-show="rideHistory.length == 0">No rides!</div>
-      <table class="table table-hover" ng-hide="rideHistory.length == 0">
+    <div class="col-xs-6">
+      <h2>Upcoming Trips</h2>
+      <div ng-show="upcomingDrives.length == 0">No upcoming drives. Click above to create one.</div>
+      <table class="table table-hover" ng-hide="upcomingDrives.length == 0">
+        <thead>
+          <tr>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Time</th>
+            <th>Space For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="y in upcomingDrives">
+            <td>{{y.origin}}</td>
+            <td>{{y.dest}}</td>
+            <td>{{y.ride_time}}</td>
+            <td>{{y.space_for}} other ppl</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-6">
+      <h2>Trips Driven + Combined Earnings</h2>
+      <div ng-show="driveHistory.length == 0">No finished drives yet!</div>
+      <table class="table table-hover" ng-hide="driveHistory.length == 0">
         <thead>
           <tr>
             <th>Origin</th>
@@ -43,11 +65,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="car in rideHistory">
-            <td>{{car.origin}}</td>
-            <td>{{car.dest}}</td>
-            <td>{{car.ride_time}}</td>
-            <td>${{car.earned}}</td>
+          <tr ng-repeat="x in driveHistory">
+            <td>{{x.origin}}</td>
+            <td>{{x.dest}}</td>
+            <td>{{x.ride_time}}</td>
+            <td>${{x.earned}}</td>
           </tr>
         </tbody>
       </table>

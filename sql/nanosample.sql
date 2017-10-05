@@ -34,7 +34,7 @@ create function init_car () returns trigger as $$
 	end; $$ language plpgsql;
 
 create trigger init_car before insert on trips
-for each row execute procedure init_car();
+	for each row execute procedure init_car();
 
 insert into trips (id, origin, dest, ride_time, space_for) values
 	('driver@drive.com', 'Changi Airport T1', 'Sengkang Ave 5', '2017-10-06 11:05:13', 3),

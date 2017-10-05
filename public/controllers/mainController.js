@@ -22,14 +22,20 @@ app.controller('LoginController', ['$scope', '$http', function($scope, $http) {
   $scope.login = function(redirURL) {
     $http({
       method: 'GET',
-      url: '/login/' + $scope.loginEmail
+      url: '/' + redirURL + 'login/' + $scope.loginEmail
     }).then(function successCallback(response) {
-      console.log(response.data.email);
-      if ( response.data.email === $scope.loginEmail ) {
+      console.log(response.data);
+      if ( response.data === null) {
+        if ( redirURL === 'driver' ) {
+          $scope.errorMessage = "Please register a car to your account first";
+        } else {
+          $scope.errorMessage = "No such user found";
+        }
+      } else if ( response.data.email === $scope.loginEmail ) {
         window.localStorage.setItem("user", $scope.loginEmail);
         window.location.href = '/#!/' + redirURL;
       } else {
-        $scope.errorMessage = "Invalid email";
+        $scope.errorMessage = "Strange error. Siao liao.";
       }
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
@@ -38,9 +44,55 @@ app.controller('LoginController', ['$scope', '$http', function($scope, $http) {
   }
 }]);
 
+app.controller('RiderController', ['$scope', '$http', function($scope, $http) {
+  $scope.riderName = "";
+  $scope.relevantTrips = []
+  $scope.email = window.localStorage.getItem("user");
+
+  if ( !$scope.email ) {
+    window.location.href = '/#!/';
+  }
+
+  $scope.resetForm = function() {
+    $scope.addForm.num_riders = "Number of Riders";
+    $scope.addForm.origin = "Origin";
+    $scope.addForm.dest = "Destination";
+  }
+  
+  $scope.addForm = {}
+  $scope.resetForm();
+
+  $scope.getName = function() {
+    $http({
+      method: 'GET',
+      url: '/user/' + $scope.email + '/name'
+    }).then(function successCallback(response) {
+      console.log(response.data);
+      $scope.riderName = response.data[0].name;
+    }, function errorCallback(response) {
+
+    });
+  }
+
+  $scope.getName();
+
+  $scope.getRelevantTrips = function() {
+    $http({
+      method: 'GET',
+      url: '/user/' + $scope.email + '/relevanttrips',
+      data: JSON.parse(JSON.stringify($scope.addForm))
+    }).then(function successCallback(response) {
+      console.log(response.data);
+      $scope.relevantTrips = response.data.name;
+    }, function errorCallback(response) {
+
+    });
+  }
+}]);
+
 
 app.controller('DriverController', ['$scope', '$http', function($scope, $http) {
-  $scope.driverName = "Driver";
+  $scope.driverName = "";
   $scope.email = window.localStorage.getItem("user");
 
   if ( !$scope.email ) {
@@ -50,38 +102,60 @@ app.controller('DriverController', ['$scope', '$http', function($scope, $http) {
     $scope.addForm.spaces = 0;
     $scope.addForm.origin = "";
     $scope.addForm.destination = "";
-    $scope.addForm.time = "2017-10-06 11:05:13";
+    $scope.addForm.time = "2000-01-01 01:01:01";
   }
   $scope.showAddForm = false;
   
   $scope.addForm = {}
   $scope.resetForm();
   
-  $scope.rideHistory = [];
-
+  $scope.upcomingDrives = [];
+  $scope.driveHistory = [];
   
   $scope.logout = function() {
     localStorage.clear();
     window.location.href = '/#!/';  
   }
+
+  $scope.getName = function() {
+    $http({
+      method: 'GET',
+      url: '/user/' + $scope.email + '/name'
+    }).then(function successCallback(response) {
+      console.log(response.data);
+      $scope.driverName = response.data[0].name;
+    }, function errorCallback(response) {
+
+    });
+  }
+
+  $scope.getName();
   
-  $scope.getRides = function() {
+  $scope.getDriveHistory = function() {
     $http({
       method: 'GET',
       url: '/user/' + $scope.email + '/drivehistory'
     }).then(function successCallback(response) {
       console.log(response.data);
-      $scope.rideHistory = response.data;
+      $scope.driveHistory = response.data;
     }, function errorCallback(response) {
     });
   }
 
-  $scope.getRides();
-  
-  $scope.addDisabled = function() {
-    return false;
+  $scope.getDriveHistory();
+
+  $scope.getFutureDrives = function() {
+    $http({
+      method: 'GET',
+      url: '/user/' + $scope.email + '/futuredrives'
+    }).then(function successCallback(response) {
+      console.log(response.data);
+      $scope.upcomingDrives = response.data;
+    }, function errorCallback(response) {
+    });
   }
 
+  $scope.getFutureDrives();
   
   $scope.addTrip = function() {
       $http({
@@ -90,6 +164,7 @@ app.controller('DriverController', ['$scope', '$http', function($scope, $http) {
         data: JSON.parse(JSON.stringify($scope.addForm))
       }).then(function successCallback(response) {
         console.log(response.data);
+        $scope.getFutureDrives();
       }, function errorCallback(response) {
       });
       $scope.resetForm();
@@ -105,40 +180,5 @@ app.controller('DriverController', ['$scope', '$http', function($scope, $http) {
         break;
       }
     }
-  }
-}]);
-
-
-app.controller('RiderController', ['$scope', '$http', function($scope, $http) {
-  $scope.riderName = "Rider";
-  
-  $scope.carList = [
-    {
-      "id": 1,
-      "name": "Red Honda",
-      "spaces": 2,
-      "destination": "Bedok"
-    },
-    {
-      "id": 2,
-      "name": "Blue Toyota",
-      "spaces": 1,
-      "destination": "Serangoon"
-    }
-  ]
-  
-  $scope.bid = function(carid) {
-    console.log(carid);
-    
-    $http({
-      method: 'GET',
-      url: '/dbTest'
-    }).then(function successCallback(response) {
-      console.log(response.data);
-      $scope.title = "Doneee";
-    }, function errorCallback(response) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-    });
   }
 }]);

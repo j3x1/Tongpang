@@ -19,6 +19,9 @@ where t.status = 'tentative' and t.id != MY_ID and
     	and b.d_dest = t.dest and b.ride_time = t.ride_time and b.status = 'accepted') co_riders) + NUM_MY_RIDERS <= t.space_for
 	and (t.origin like '%MY_ORIGIN%' or t.dest like '%MY_DEST%');
 
+/* All tentative trips */
+select origin, dest, ride_time, space_for from trips where id = MY_ID and status = 'tentative';
+
 /* All pending bids for a tentative/ongoing trip */
 select b.p_id, b.p_origin, b.p_dest, b.ride_time, b.price from bids b
 where b.d_id = MY_ID and b.d_origin = MY_ORIGIN and b.d_dest = MY_DEST and b.ride_time = MY_RIDE_TIME and b.status = 'pending';
